@@ -31,7 +31,7 @@ stages:
 
     - task: ECRPushImage@1
       inputs:
-        awsCredentials: 'AWS_Service'
+        awsCredentials: 'aws_connections'
         regionName: 'us-east-2'
         imageSource: 'imagename'
         sourceImageName: '465731220541.dkr.ecr.us-east-2.amazonaws.com/hello_world_luis'
