@@ -11,31 +11,29 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
 
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
-        repository: '465731220541.dkr.ecr.us-east-2.amazonaws.com/hello_world_luis'
+jobs:
+- job: Build_and_Push
+  displayName: Build and Push Docker image
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - task: Docker@2
+    displayName: Build an image
+    inputs:
+      command: build
+      dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+      tags: |
+        $(tag)
+      repository: '465731220541.dkr.ecr.us-east-2.amazonaws.com/hello_world_luis'
 
-    - task: ECRPushImage@1
-      inputs:
-        awsCredentials: 'aws_connections'
-        regionName: 'us-east-2'
-        imageSource: 'imagename'
-        sourceImageName: '465731220541.dkr.ecr.us-east-2.amazonaws.com/hello_world_luis'
-        sourceImageTag: $(Build.BuildId)
-        pushTag: 'latest'
-        repositoryName: 'hello_world_luis'
+  - task: ECRPushImage@1
+    inputs:
+      awsCredentials: 'aws_connections'
+      regionName: 'us-east-2'
+      imageSource: 'imagename'
+      sourceImageName: '465731220541.dkr.ecr.us-east-2.amazonaws.com/hello_world_luis'
+      sourceImageTag: $(Build.BuildId)
+      pushTag: 'latest'
+      repositoryName: 'hello_world_luis'
+      
   
